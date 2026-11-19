@@ -56,3 +56,10 @@ Default weights: Marks 40%, Attendance 25%, Study Hours 15%, Sleep target score 
 
 ## Security / production roadmap
 Uploads are processed in memory and not persisted by default. Do not publicly deploy identifiable student data. Production needs institutional SSO/RBAC, encrypted storage, audit logs, retention controls, rate limiting, dependency scanning and formal model validation. Keep dependencies updated.
+
+
+## Upgrade notes
+- Expanded data validation and quality reporting.
+- Added component-level indicator transparency and explicit methodology tab.
+- Added optional department filtering and department summary.
+- Added stronger edge-case tests and CSV spreadsheet compatibility.

@@ -1,81 +1,154 @@
 from pathlib import Path
 import logging
+import sys
 import pandas as pd
+
+# Ensure the src-layout package is importable locally and on Streamlit Community Cloud.
+PROJECT_ROOT = Path(__file__).resolve().parent
+SRC_DIR = PROJECT_ROOT / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
 import streamlit as st
 from campuspulse.data import load_dataset, DatasetError, quality_report
 from campuspulse.scoring import calculate_indicator
-from campuspulse.analytics import academic_summary, attendance_summary, correlation_matrix, outlier_summary
+from campuspulse.analytics import (academic_summary, attendance_summary, correlation_matrix,
+                                   outlier_summary, department_summary)
 from campuspulse.charts import marks_histogram, attendance_histogram, indicator_bar, correlation_heatmap
 from campuspulse.reporting import csv_bytes
+from campuspulse.config import MAX_UPLOAD_MB
 
 logging.basicConfig(level=logging.INFO)
-st.set_page_config(page_title="CampusPulse AI", page_icon="🎓", layout="wide")
+st.set_page_config(page_title="CampusPulse AI", page_icon="🎓", layout="wide", initial_sidebar_state="expanded")
 st.title("🎓 CampusPulse AI")
 st.subheader("Smart Campus Intelligence System")
-st.caption("Educational analytics prototype · Synthetic demo data · Not a predictive or diagnostic system")
+st.caption("Explainable educational analytics prototype · Not a predictive or diagnostic system")
+
 with st.sidebar:
     st.header("Control centre")
-    upload = st.file_uploader("Upload student CSV", type=["csv"])
+    upload = st.file_uploader("Upload student CSV", type=["csv"], help=f"Maximum recommended upload size: {MAX_UPLOAD_MB} MB")
     demo = st.checkbox("Use synthetic sample data", value=upload is None)
+
 try:
     if upload is not None:
-        raw, notices = load_dataset(upload); source = upload.name
+        if upload.size > MAX_UPLOAD_MB * 1024 * 1024:
+            st.error(f"File is too large. Please upload a CSV smaller than {MAX_UPLOAD_MB} MB.")
+            st.stop()
+        raw, notices = load_dataset(upload)
+        source = upload.name
     elif demo:
-        raw, notices = load_dataset(Path(__file__).parent/"data"/"sample_students.csv"); source = "Synthetic sample"
+        raw, notices = load_dataset(Path(__file__).parent / "data" / "sample_students.csv")
+        source = "Synthetic sample"
     else:
-        st.info("Upload a CSV or enable sample data."); st.stop()
+        st.info("Upload a CSV or enable synthetic sample data to begin.")
+        st.stop()
 except DatasetError as exc:
-    st.error(str(exc)); st.stop()
+    st.error(str(exc))
+    st.stop()
 except Exception:
     logging.exception("Dataset processing failed")
-    st.error("Unable to process this CSV. Confirm it has Name and Marks columns."); st.stop()
-for message in notices: st.warning(message)
+    st.error("Unable to process this CSV. Check the file format and required Name and Marks columns.")
+    st.stop()
+
+for message in notices:
+    st.warning(message)
+
 scored = calculate_indicator(raw)
 with st.sidebar:
-    lo, hi = float(scored.Marks.min()), float(scored.Marks.max())
-    mark_range = st.slider("Marks range", 0.0, 100.0, (max(0.0,lo), min(100.0,hi)))
-    bands = sorted(scored.Indicator_Band.astype(str).unique().tolist())
-    selected = st.multiselect("Indicator band", bands, default=bands)
-view = scored[scored.Marks.between(*mark_range)].copy()
-if selected: view = view[view.Indicator_Band.astype(str).isin(selected)]
-if view.empty: st.warning("No rows match the selected filters."); st.stop()
-a, t = academic_summary(view), attendance_summary(view)
-m = st.columns(5)
-m[0].metric("Students",len(view))
-m[1].metric("Average marks",f"{a['mean']:.1f}%" if a["mean"] is not None else "N/A")
-m[2].metric("Pass rate",f"{a['pass_rate']:.1f}%" if a["pass_rate"] is not None else "N/A")
-m[3].metric("Avg attendance",f"{t['mean']:.1f}%" if t["mean"] is not None else "N/A")
-mean_i = view.Campus_Indicator.mean()
-m[4].metric("Avg indicator",f"{mean_i:.1f}/100" if pd.notna(mean_i) else "N/A")
-st.caption(f"Data source: {source} · Showing {len(view)} of {len(scored)} rows")
-tabs = st.tabs(["Overview","Academics","Attendance","Insights","Data quality"])
+    st.divider()
+    st.subheader("Filters")
+    marks_values = pd.to_numeric(scored["Marks"], errors="coerce").dropna()
+    if marks_values.empty:
+        st.error("No valid marks available for filtering.")
+        st.stop()
+    mark_range = st.slider("Marks range", 0.0, 100.0, (float(marks_values.min()), float(marks_values.max())))
+    bands = sorted(scored["Indicator_Band"].astype(str).unique().tolist())
+    selected_bands = st.multiselect("Indicator band", bands, default=bands)
+    departments = sorted(scored["Department"].dropna().astype(str).unique().tolist()) if "Department" in scored else []
+    selected_departments = st.multiselect("Department", departments, default=departments) if departments else []
+
+view = scored[scored["Marks"].between(*mark_range)].copy()
+if selected_bands:
+    view = view[view["Indicator_Band"].astype(str).isin(selected_bands)]
+if departments and selected_departments:
+    view = view[view["Department"].astype(str).isin(selected_departments)]
+if view.empty:
+    st.warning("No rows match the selected filters. Adjust the filters in the sidebar.")
+    st.stop()
+
+academic = academic_summary(view)
+attendance = attendance_summary(view)
+mean_indicator = view["Campus_Indicator"].mean()
+metrics = st.columns(5)
+metrics[0].metric("Students", f"{len(view):,}")
+metrics[1].metric("Average marks", f"{academic['mean']:.1f}%" if academic["mean"] is not None else "N/A")
+metrics[2].metric("Pass rate", f"{academic['pass_rate']:.1f}%" if academic["pass_rate"] is not None else "N/A")
+metrics[3].metric("Avg attendance", f"{attendance['mean']:.1f}%" if attendance["mean"] is not None else "N/A")
+metrics[4].metric("Avg indicator", f"{mean_indicator:.1f}/100" if pd.notna(mean_indicator) else "N/A")
+st.caption(f"Data source: {source} · Showing {len(view):,} of {len(scored):,} rows")
+
+tabs = st.tabs(["Overview", "Academics", "Attendance", "Insights", "Data quality", "Methodology"])
 with tabs[0]:
-    x,y=st.columns([1.3,1])
-    x.plotly_chart(indicator_bar(view),use_container_width=True)
-    y.subheader("Indicator band distribution"); y.bar_chart(view.Indicator_Band.astype(str).value_counts())
+    left, right = st.columns([1.3, 1])
+    left.plotly_chart(indicator_bar(view), use_container_width=True)
+    right.subheader("Indicator band distribution")
+    right.bar_chart(view["Indicator_Band"].astype(str).value_counts())
     st.info("Indicator groups are descriptive summaries, not predictions or labels of student ability.")
+    dept = department_summary(view)
+    if not dept.empty:
+        st.subheader("Department comparison")
+        st.dataframe(dept, use_container_width=True, hide_index=True)
 with tabs[1]:
-    st.plotly_chart(marks_histogram(view),use_container_width=True)
-    st.dataframe(view[["Name","Marks","Campus_Indicator","Indicator_Coverage","Indicator_Band"]].sort_values("Marks",ascending=False),use_container_width=True,hide_index=True)
+    st.plotly_chart(marks_histogram(view), use_container_width=True)
+    st.write({"Median marks": academic["median"], "Highest marks": academic["highest"], "Lowest marks": academic["lowest"], "Standard deviation": academic["std"]})
+    cols = [c for c in ["Name", "Department", "Year", "Marks", "Campus_Indicator", "Indicator_Coverage", "Indicator_Band"] if c in view]
+    st.dataframe(view[cols].sort_values("Marks", ascending=False), use_container_width=True, hide_index=True)
 with tabs[2]:
-    if "Attendance" in view and view.Attendance.notna().any():
-        st.plotly_chart(attendance_histogram(view),use_container_width=True)
-        st.write(f"Below 75% reference: {t['below_threshold']} · At/above: {t['at_or_above_threshold']}")
-        st.dataframe(view[["Name","Attendance","Marks"]].sort_values("Attendance"),use_container_width=True,hide_index=True)
-    else: st.info("No usable Attendance values. Add an Attendance column from 0–100.")
+    if "Attendance" in view and view["Attendance"].notna().any():
+        st.plotly_chart(attendance_histogram(view), use_container_width=True)
+        st.write(f"Below 75% reference: {attendance['below_threshold']} · At/above: {attendance['at_or_above_threshold']}")
+        cols = [c for c in ["Name", "Department", "Attendance", "Marks"] if c in view]
+        st.dataframe(view[cols].sort_values("Attendance"), use_container_width=True, hide_index=True)
+    else:
+        st.info("No usable Attendance values. Add an Attendance column from 0–100.")
 with tabs[3]:
-    corr=correlation_matrix(view)
+    corr = correlation_matrix(view)
     if not corr.empty:
-        st.subheader("Correlation matrix"); st.dataframe(corr,use_container_width=True)
-        st.pyplot(correlation_heatmap(view),use_container_width=True)
-        st.caption("Correlation is association, not proof of causation.")
-    st.subheader("IQR outlier exploration"); st.dataframe(outlier_summary(view),use_container_width=True,hide_index=True)
-    st.caption("Outlier flags prompt data review; they are not judgements about people.")
+        st.subheader("Correlation matrix")
+        st.dataframe(corr, use_container_width=True)
+        st.pyplot(correlation_heatmap(view), use_container_width=True)
+        st.caption("Correlation describes association; it does not establish causation.")
+    else:
+        st.info("At least two usable numeric metrics with paired observations are needed for correlation analysis.")
+    st.subheader("IQR outlier exploration")
+    outliers = outlier_summary(view)
+    if outliers.empty:
+        st.info("At least four valid observations per metric are needed for IQR outlier exploration.")
+    else:
+        st.dataframe(outliers, use_container_width=True, hide_index=True)
+    st.caption("Outlier flags are prompts for data review, not judgements about students.")
 with tabs[4]:
-    st.subheader("Data preview"); st.dataframe(raw.head(30),use_container_width=True,hide_index=True)
-    st.subheader("Quality report"); st.dataframe(quality_report(raw),use_container_width=True,hide_index=True)
-    st.write(f"Rows: {len(raw)} · Columns: {len(raw.columns)} · Exact duplicate rows: {raw.duplicated().sum()}")
+    st.subheader("Data preview")
+    st.dataframe(raw.head(50), use_container_width=True, hide_index=True)
+    st.subheader("Quality report")
+    quality = quality_report(raw)
+    st.dataframe(quality, use_container_width=True, hide_index=True)
+    q1, q2, q3 = st.columns(3)
+    q1.metric("Rows", len(raw))
+    q2.metric("Columns", len(raw.columns))
+    q3.metric("Exact duplicate rows", int(raw.duplicated().sum()))
+with tabs[5]:
+    st.subheader("Campus Indicator methodology")
+    st.write("The Campus Indicator is a transparent weighted descriptive score. It is not a trained machine-learning model and is not validated for student selection, diagnosis, or prediction.")
+    weights = pd.DataFrame({"Component": ["Marks", "Attendance", "Study hours", "Sleep target score", "Screen-time target score"], "Weight": [40, 25, 15, 10, 10], "Transformation": ["Marks as percentage", "Attendance as percentage", "4 study hours maps to 100; capped at 100", "Illustrative target of 8 hours", "Illustrative target of 2 hours; penalty above target"]})
+    st.dataframe(weights, use_container_width=True, hide_index=True)
+    st.write("Missing components are excluded from an individual calculation. Remaining weights are renormalised, and Indicator_Coverage reports the share of configured weight represented by available data.")
+    st.warning("Sleep and screen-time transformations are illustrative design assumptions, not medical or behavioural guidance.")
+
 st.divider()
-st.download_button("Download filtered analytics CSV",csv_bytes(view),"campuspulse_analytics.csv","text/csv")
-st.download_button("Download data quality CSV",csv_bytes(quality_report(raw)),"campuspulse_quality.csv","text/csv")
-st.caption("Privacy first: use synthetic or properly anonymised, consented data.")
+st.subheader("Export reports")
+col_a, col_b = st.columns(2)
+with col_a:
+    st.download_button("Download filtered analytics CSV", csv_bytes(view), "campuspulse_analytics.csv", "text/csv", use_container_width=True)
+with col_b:
+    st.download_button("Download data quality CSV", csv_bytes(quality_report(raw)), "campuspulse_quality.csv", "text/csv", use_container_width=True)
+st.caption("Privacy first: use synthetic data or properly anonymised, consented data. Do not upload identifiable student records to a public demo.")
