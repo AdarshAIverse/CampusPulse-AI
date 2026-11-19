@@ -1,0 +1,17 @@
+README.md
+pyproject.toml
+src/campuspulse/__init__.py
+src/campuspulse/analytics.py
+src/campuspulse/charts.py
+src/campuspulse/config.py
+src/campuspulse/data.py
+src/campuspulse/reporting.py
+src/campuspulse/scoring.py
+src/campuspulse_ai.egg-info/PKG-INFO
+src/campuspulse_ai.egg-info/SOURCES.txt
+src/campuspulse_ai.egg-info/dependency_links.txt
+src/campuspulse_ai.egg-info/requires.txt
+src/campuspulse_ai.egg-info/top_level.txt
+tests/test_analytics.py
+tests/test_data.py
+tests/test_scoring.py

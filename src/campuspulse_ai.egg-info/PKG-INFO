@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: campuspulse-ai
+Version: 2.0.0
+Summary: Privacy-aware smart campus analytics prototype
+Requires-Python: >=3.10
+Requires-Dist: streamlit<2,>=1.36
+Requires-Dist: pandas<4,>=2.1
+Requires-Dist: numpy<3,>=1.26
+Requires-Dist: plotly<7,>=5.20
+Requires-Dist: matplotlib<4,>=3.8
+Requires-Dist: seaborn<1,>=0.13
