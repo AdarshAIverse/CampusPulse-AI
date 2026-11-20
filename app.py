@@ -1,4 +1,4 @@
-from pathlib import Path
+﻿from pathlib import Path
 import logging
 import sys
 
@@ -19,8 +19,15 @@ if str(SRC_DIR) not in sys.path:
 # CAMPUSPULSE IMPORTS
 # --------------------------------------------------
 
-from campuspulse.pdf_reporting import student_pdf_bytes, campus_pdf_bytes
-from campuspulse.data import load_dataset, DatasetError, quality_report
+from campuspulse.pdf_reporting import (
+    student_pdf_bytes,
+    campus_pdf_bytes,
+)
+from campuspulse.data import (
+    load_dataset,
+    DatasetError,
+    quality_report,
+)
 from campuspulse.scoring import calculate_indicator
 from campuspulse.analytics import (
     academic_summary,
@@ -47,13 +54,13 @@ logging.basicConfig(level=logging.INFO)
 
 st.set_page_config(
     page_title="CampusPulse AI",
-    page_icon="🎓",
+    page_icon="ðŸŽ“",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 # --------------------------------------------------
-# CACHED SAMPLE DATASET
+# CACHED DATASET AND ANALYTICS
 # --------------------------------------------------
 
 @st.cache_data(show_spinner=False)
@@ -63,8 +70,49 @@ def load_sample_dataset():
     return load_dataset(sample_path)
 
 
+@st.cache_data(show_spinner=False)
+def cached_indicator(frame):
+    """Cache the descriptive Campus Indicator calculation."""
+    return calculate_indicator(frame)
+
+
+@st.cache_data(show_spinner=False)
+def cached_academic_summary(frame):
+    return academic_summary(frame)
+
+
+@st.cache_data(show_spinner=False)
+def cached_attendance_summary(frame):
+    return attendance_summary(frame)
+
+
+@st.cache_data(show_spinner=False)
+def cached_correlation_matrix(frame):
+    return correlation_matrix(frame)
+
+
+@st.cache_data(show_spinner=False)
+def cached_outlier_summary(frame):
+    return outlier_summary(frame)
+
+
+@st.cache_data(show_spinner=False)
+def cached_department_summary(frame):
+    return department_summary(frame)
+
+
+@st.cache_data(show_spinner=False)
+def cached_support_plan(frame):
+    return build_support_plan(frame)
+
+
+@st.cache_data(show_spinner=False)
+def cached_quality_report(frame):
+    return quality_report(frame)
+
+
 # --------------------------------------------------
-# PROFESSIONAL DASHBOARD THEME
+# PROFESSIONAL AND ACCESSIBLE DASHBOARD THEME
 # --------------------------------------------------
 
 st.markdown(
@@ -106,6 +154,8 @@ st.markdown(
 
     button[data-baseweb="tab"] {
         color: #A9BED8;
+        min-height: 44px;
+        font-weight: 600;
     }
 
     button[data-baseweb="tab"][aria-selected="true"] {
@@ -135,20 +185,29 @@ st.markdown(
         line-height: 1.5;
     }
 
-    /* Keyboard focus visibility */
-    *:focus-visible {
-        outline: 3px solid #60A5FA !important;
-        outline-offset: 3px !important;
+    [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMarkdownContainer"] li {
+        line-height: 1.65;
     }
 
-    /* Button visibility */
+    /* Keyboard focus visibility */
+    *:focus-visible {
+        outline: 3px solid #93C5FD !important;
+        outline-offset: 4px !important;
+    }
+
+    /* Comfortable interactive controls */
     .stButton button,
     .stDownloadButton button {
         min-height: 44px;
         font-weight: 600;
     }
 
-    /* Form labels */
+    /* Accessible form labels */
+    [data-testid="stWidgetLabel"] {
+        font-weight: 700 !important;
+    }
+
     .stTextInput label,
     .stSelectbox label,
     .stNumberInput label,
@@ -177,10 +236,126 @@ st.markdown(
     /* Mobile spacing */
     @media (max-width: 768px) {
         .block-container {
-            padding-left: 1rem;
-            padding-right: 1rem;
+            padding-left: 0.8rem;
+            padding-right: 0.8rem;
         }
     }
+    /* ==========================================
+   CAMPUSPULSE AI - ACCESSIBILITY ENHANCEMENT
+   ========================================== */
+
+/* Strong, consistent keyboard focus */
+*:focus-visible {
+    outline: 3px solid #FFD166 !important;
+    outline-offset: 4px !important;
+    box-shadow: 0 0 0 2px #0B1220 !important;
+}
+
+/* Better text readability */
+.stApp,
+.stApp p,
+.stApp li,
+.stApp label,
+.stApp span {
+    line-height: 1.6;
+}
+
+/* Headings must remain clearly distinguishable */
+.stApp h1 {
+    font-size: 2rem !important;
+    font-weight: 750 !important;
+}
+
+.stApp h2 {
+    font-size: 1.6rem !important;
+    font-weight: 700 !important;
+}
+
+.stApp h3 {
+    font-size: 1.25rem !important;
+    font-weight: 650 !important;
+}
+
+/* Improve muted text contrast */
+.stCaption,
+[data-testid="stCaption"],
+small {
+    color: #C2D2E5 !important;
+}
+
+/* Inputs: visible borders and readable text */
+.stTextInput input,
+.stNumberInput input,
+.stSelectbox div[data-baseweb="select"],
+.stMultiSelect div[data-baseweb="select"] {
+    border: 1px solid #8FA9C7 !important;
+    min-height: 44px;
+}
+
+/* Buttons: accessible size and contrast */
+.stButton button,
+.stDownloadButton button,
+.stFormSubmitButton button {
+    min-height: 44px !important;
+    font-size: 16px !important;
+    font-weight: 650 !important;
+    border: 2px solid #8CCBFF !important;
+}
+
+/* Tabs: improve selected and unselected visibility */
+button[data-baseweb="tab"] {
+    min-height: 44px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+}
+
+button[data-baseweb="tab"][aria-selected="true"] {
+    color: #FFFFFF !important;
+    border-bottom: 3px solid #FFD166 !important;
+}
+
+/* Data tables */
+[data-testid="stDataFrame"] {
+    border: 1px solid #8FA9C7 !important;
+    border-radius: 10px;
+}
+
+/* Links should be distinguishable without relying on color */
+.stApp a {
+    text-decoration: underline !important;
+    text-underline-offset: 3px;
+}
+
+/* Alert readability */
+[data-testid="stAlert"] {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+    .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .stButton button,
+    .stDownloadButton button {
+        width: 100%;
+    }
+}
     </style>
     """,
     unsafe_allow_html=True,
@@ -190,7 +365,7 @@ st.markdown(
 # HEADER
 # --------------------------------------------------
 
-st.title("🎓 CampusPulse AI")
+st.title("ðŸŽ“ CampusPulse AI")
 st.subheader("Smart Campus Intelligence System")
 
 st.markdown(
@@ -215,7 +390,7 @@ st.markdown(
 )
 
 st.caption(
-    "Explainable educational analytics prototype · "
+    "Explainable educational analytics prototype Â· "
     "Not a predictive or diagnostic system"
 )
 
@@ -259,8 +434,6 @@ try:
         source = upload.name
 
     elif demo:
-
-        # Cached loading for the built-in sample dataset
         raw, notices = load_sample_dataset()
         source = "Synthetic sample"
 
@@ -293,7 +466,7 @@ for message in notices:
 # CAMPUS INDICATOR CALCULATION
 # --------------------------------------------------
 
-scored = calculate_indicator(raw)
+scored = cached_indicator(raw)
 
 # --------------------------------------------------
 # SIDEBAR: FILTERS
@@ -335,7 +508,13 @@ with st.sidebar:
     )
 
     departments = (
-        sorted(scored["Department"].dropna().astype(str).unique().tolist())
+        sorted(
+            scored["Department"]
+            .dropna()
+            .astype(str)
+            .unique()
+            .tolist()
+        )
         if "Department" in scored.columns
         else []
     )
@@ -377,11 +556,11 @@ if view.empty:
     st.stop()
 
 # --------------------------------------------------
-# SUMMARY CALCULATIONS
+# SUMMARY CALCULATIONS - CACHED
 # --------------------------------------------------
 
-academic = academic_summary(view)
-attendance = attendance_summary(view)
+academic = cached_academic_summary(view)
+attendance = cached_attendance_summary(view)
 
 mean_indicator = view["Campus_Indicator"].mean()
 
@@ -425,7 +604,7 @@ metrics[4].metric(
 )
 
 st.caption(
-    f"Data source: {source} · "
+    f"Data source: {source} Â· "
     f"Showing {len(view):,} of {len(scored):,} rows"
 )
 
@@ -454,9 +633,32 @@ with tabs[0]:
 
     left, right = st.columns([1.3, 1])
 
-    left.plotly_chart(
-        indicator_bar(view),
+    left.subheader("Campus Indicator Distribution")
+
+left.caption(
+    "Bar chart showing the distribution of student "
+    "Campus Indicator scores. The table below provides "
+    "the same information in a screen-reader-friendly format."
+)
+
+left.plotly_chart(
+    indicator_bar(view),
+    use_container_width=True,
+    config={"displayModeBar": True, "displaylogo": False},
+)
+
+indicator_accessible_data = (
+    view.groupby("Indicator_Band", dropna=False)
+    .size()
+    .reset_index(name="Number of Students")
+    .rename(columns={"Indicator_Band": "Indicator Band"})
+)
+
+with left.expander("View indicator distribution as a data table"):
+    st.dataframe(
+        indicator_accessible_data,
         use_container_width=True,
+        hide_index=True,
     )
 
     right.subheader("Indicator Band Distribution")
@@ -470,7 +672,7 @@ with tabs[0]:
         "not predictions or labels of student ability."
     )
 
-    dept = department_summary(view)
+    dept = cached_department_summary(view)
 
     if not dept.empty:
         st.subheader("Department Comparison")
@@ -487,9 +689,18 @@ with tabs[0]:
 
 with tabs[1]:
 
+    st.subheader("Academic Performance Distribution")
+
+    st.caption(
+        "Histogram showing the distribution of student marks. "
+        "The student records table below provides an alternative "
+        "way to inspect individual marks."
+    )
+    
     st.plotly_chart(
         marks_histogram(view),
         use_container_width=True,
+        config={"displayModeBar": True, "displaylogo": False},
     )
 
     st.write(
@@ -531,14 +742,24 @@ with tabs[2]:
         and view["Attendance"].notna().any()
     ):
 
+        st.subheader("Attendance Distribution")
+
+        st.caption(
+            "Histogram showing student attendance percentages. "
+            "The table below lists individual attendance values "
+            "so the information is not available only through color "
+            "or visual interpretation."
+        )
+        
         st.plotly_chart(
             attendance_histogram(view),
             use_container_width=True,
+            config={"displayModeBar": True, "displaylogo": False},
         )
 
         st.write(
             f"Below 75% reference: "
-            f"{attendance['below_threshold']} · "
+            f"{attendance['below_threshold']} Â· "
             f"At/above: {attendance['at_or_above_threshold']}"
         )
 
@@ -561,7 +782,7 @@ with tabs[2]:
     else:
         st.info(
             "No usable Attendance values. "
-            "Add an Attendance column from 0–100."
+            "Add an Attendance column from 0â€“100."
         )
 
 # --------------------------------------------------
@@ -570,7 +791,7 @@ with tabs[2]:
 
 with tabs[3]:
 
-    corr = correlation_matrix(view)
+    corr = cached_correlation_matrix(view)
 
     if not corr.empty:
 
@@ -581,6 +802,14 @@ with tabs[3]:
             use_container_width=True,
         )
 
+        st.subheader("Correlation Heatmap")
+
+        st.caption(
+            "This heatmap displays relationships between numeric "
+            "student metrics. The correlation table above provides "
+            "the exact numeric values without relying on color."
+        )
+        
         st.pyplot(
             correlation_heatmap(view),
             use_container_width=True,
@@ -599,7 +828,7 @@ with tabs[3]:
 
     st.subheader("IQR Outlier Exploration")
 
-    outliers = outlier_summary(view)
+    outliers = cached_outlier_summary(view)
 
     if outliers.empty:
 
@@ -636,7 +865,7 @@ with tabs[4]:
 
     st.subheader("Quality Report")
 
-    quality = quality_report(raw)
+    quality = cached_quality_report(raw)
 
     st.dataframe(
         quality,
@@ -667,7 +896,7 @@ with tabs[5]:
         "Not a predictive diagnosis."
     )
 
-    support = build_support_plan(view)
+    support = cached_support_plan(view)
 
     counts = support["Support_Status"].value_counts()
 
@@ -856,7 +1085,7 @@ with tabs[6]:
 
     st.subheader("Student Support Assessment")
 
-    student_support = build_support_plan(
+    student_support = cached_support_plan(
         profile_data.iloc[[selected_student]].copy()
     )
 
@@ -970,12 +1199,11 @@ st.divider()
 
 st.subheader("Export Reports")
 
-col_a, col_b = st.columns(2)
+col_a, col_b, col_c = st.columns(3)
 
 with col_a:
-
     st.download_button(
-        label="Download Filtered Campus Analytics (CSV)",
+        label="Download Campus Analytics CSV",
         data=csv_bytes(view),
         file_name="campuspulse_analytics.csv",
         mime="text/csv",
@@ -984,13 +1212,22 @@ with col_a:
     )
 
 with col_b:
-
     st.download_button(
-        label="Download Data Quality Report (CSV)",
-        data=csv_bytes(quality_report(raw)),
+        label="Download Campus Analytics PDF",
+        data=campus_pdf_bytes(view, source),
+        file_name="campuspulse_campus_report.pdf",
+        mime="application/pdf",
+        help="Download the campus-level analytics PDF report.",
+        use_container_width=True,
+    )
+
+with col_c:
+    st.download_button(
+        label="Download Data Quality CSV",
+        data=csv_bytes(cached_quality_report(raw)),
         file_name="campuspulse_quality.csv",
         mime="text/csv",
-        help="Download the data quality report for the loaded dataset.",
+        help="Download the data quality report.",
         use_container_width=True,
     )
 
