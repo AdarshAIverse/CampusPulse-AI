@@ -9,12 +9,14 @@ SRC_DIR = PROJECT_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 import streamlit as st
+from campuspulse.pdf_reporting import student_pdf_bytes, campus_pdf_bytes
 from campuspulse.data import load_dataset, DatasetError, quality_report
 from campuspulse.scoring import calculate_indicator
 from campuspulse.analytics import (academic_summary, attendance_summary, correlation_matrix,
                                    outlier_summary, department_summary)
 from campuspulse.charts import marks_histogram, attendance_histogram, indicator_bar, correlation_heatmap
 from campuspulse.reporting import csv_bytes
+from campuspulse.interventions import build_support_plan
 from campuspulse.config import MAX_UPLOAD_MB
 
 logging.basicConfig(level=logging.INFO)
@@ -86,7 +88,7 @@ metrics[3].metric("Avg attendance", f"{attendance['mean']:.1f}%" if attendance["
 metrics[4].metric("Avg indicator", f"{mean_indicator:.1f}/100" if pd.notna(mean_indicator) else "N/A")
 st.caption(f"Data source: {source} · Showing {len(view):,} of {len(scored):,} rows")
 
-tabs = st.tabs(["Overview", "Academics", "Attendance", "Insights", "Data quality", "Methodology"])
+tabs = st.tabs(["Overview", "Academics", "Attendance", "Insights", "Data quality", "Student Support", "Student Profile", "Methodology"])
 with tabs[0]:
     left, right = st.columns([1.3, 1])
     left.plotly_chart(indicator_bar(view), use_container_width=True)
@@ -137,6 +139,166 @@ with tabs[4]:
     q2.metric("Columns", len(raw.columns))
     q3.metric("Exact duplicate rows", int(raw.duplicated().sum()))
 with tabs[5]:
+    st.subheader("Student Support Intelligence")
+    st.caption("Transparent support screening based on configured marks and attendance thresholds. Not a predictive diagnosis.")
+
+    support = build_support_plan(view)
+    counts = support["Support_Status"].value_counts()
+
+    m1, m2, m3 = st.columns(3)
+    m1.metric("High support priority", int(counts.get("High support priority", 0)))
+    m2.metric("Academic support", int(counts.get("Needs academic support", 0)))
+    m3.metric("Attendance support", int(counts.get("Needs attendance support", 0)))
+
+    st.subheader("Student support plans")
+    support_columns = [
+        c for c in [
+            "Name", "Department", "Marks", "Attendance",
+            "Support_Status", "Support_Reason", "Recommended_Action"
+        ] if c in support.columns
+    ]
+    st.dataframe(
+        support[support_columns],
+        use_container_width=True,
+        hide_index=True
+    )
+
+    st.download_button(
+        "Download student support plan",
+        csv_bytes(support[support_columns]),
+        "campuspulse_student_support_plan.csv",
+        "text/csv",
+        use_container_width=True
+    )
+
+    st.info("Support statuses are review prompts. They should not be used alone for disciplinary, admission, or other high-stakes decisions.")
+
+with tabs[6]:
+    st.subheader("Individual Student Profile")
+    st.caption("A student-level view of the available academic and attendance data.")
+
+    profile_data = view.reset_index(drop=True).copy()
+
+    def student_label(i):
+        row = profile_data.iloc[i]
+        name = str(row.get("Name", "Unknown"))
+        department = str(row.get("Department", "Department not available"))
+        return f"{name} | {department} | Record {i + 1}"
+
+    selected_student = st.selectbox(
+        "Select a student",
+        options=list(range(len(profile_data))),
+        format_func=student_label,
+        key="student_profile_selector"
+    )
+
+    student = profile_data.iloc[selected_student]
+    st.divider()
+
+    st.subheader(str(student.get("Name", "Student")))
+
+    metric_columns = st.columns(3)
+
+    marks_value = pd.to_numeric(
+        pd.Series([student.get("Marks")]), errors="coerce"
+    ).iloc[0]
+
+    attendance_value = pd.to_numeric(
+        pd.Series([student.get("Attendance")]), errors="coerce"
+    ).iloc[0]
+
+    indicator_value = pd.to_numeric(
+        pd.Series([student.get("Campus_Indicator")]), errors="coerce"
+    ).iloc[0]
+
+    metric_columns[0].metric(
+        "Marks",
+        f"{marks_value:.1f}%" if pd.notna(marks_value) else "N/A"
+    )
+    metric_columns[1].metric(
+        "Attendance",
+        f"{attendance_value:.1f}%" if pd.notna(attendance_value) else "N/A"
+    )
+    metric_columns[2].metric(
+        "Campus Indicator",
+        f"{indicator_value:.1f}/100" if pd.notna(indicator_value) else "N/A"
+    )
+
+    st.subheader("Student information")
+    detail_columns = [
+        c for c in [
+            "Name", "Department", "Year", "Marks", "Attendance",
+            "Study_Hours", "Sleep_Hours", "Screen_Time",
+            "Campus_Indicator", "Indicator_Coverage", "Indicator_Band"
+        ] if c in profile_data.columns
+    ]
+
+    st.dataframe(
+        student[detail_columns].to_frame("Value"),
+        use_container_width=True
+    )
+
+    st.subheader("Performance overview")
+    chart_values = {
+        "Marks": marks_value,
+        "Attendance": attendance_value,
+        "Campus Indicator": indicator_value
+    }
+    chart_data = pd.DataFrame([
+        {"Metric": name, "Score": value}
+        for name, value in chart_values.items()
+        if pd.notna(value)
+    ])
+
+    if not chart_data.empty:
+        st.bar_chart(chart_data.set_index("Metric"))
+    else:
+        st.info("No numeric performance values are available for this student.")
+
+    st.subheader("Student support assessment")
+    student_support = build_support_plan(
+        profile_data.iloc[[selected_student]].copy()
+    )
+
+    support_fields = [
+        c for c in [
+            "Support_Status", "Support_Reason", "Recommended_Action"
+        ] if c in student_support.columns
+    ]
+
+    if support_fields:
+        st.dataframe(
+            student_support[support_fields],
+            use_container_width=True,
+            hide_index=True
+        )
+    else:
+        st.info("Support assessment is not available.")
+
+    st.download_button(
+        "Download individual student report",
+        csv_bytes(profile_data.iloc[[selected_student]]),
+        "campuspulse_individual_student_report.csv",
+        "text/csv",
+        use_container_width=True
+    )
+    st.download_button(
+        "Download individual student PDF",
+        student_pdf_bytes(
+            profile_data.iloc[[selected_student]].copy(),
+            source
+        ),
+        "campuspulse_individual_student_report.pdf",
+        "application/pdf",
+        use_container_width=True
+    )
+
+    st.info(
+        "This profile is a descriptive review tool. Support recommendations "
+        "require human review and must not be treated as predictions or diagnoses."
+    )
+
+with tabs[7]:
     st.subheader("Campus Indicator methodology")
     st.write("The Campus Indicator is a transparent weighted descriptive score. It is not a trained machine-learning model and is not validated for student selection, diagnosis, or prediction.")
     weights = pd.DataFrame({"Component": ["Marks", "Attendance", "Study hours", "Sleep target score", "Screen-time target score"], "Weight": [40, 25, 15, 10, 10], "Transformation": ["Marks as percentage", "Attendance as percentage", "4 study hours maps to 100; capped at 100", "Illustrative target of 8 hours", "Illustrative target of 2 hours; penalty above target"]})
