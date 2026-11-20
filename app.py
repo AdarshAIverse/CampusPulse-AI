@@ -21,10 +21,100 @@ from campuspulse.config import MAX_UPLOAD_MB
 
 logging.basicConfig(level=logging.INFO)
 st.set_page_config(page_title="CampusPulse AI", page_icon="🎓", layout="wide", initial_sidebar_state="expanded")
+# --------------------------------------------------
+# CAMPUSPULSE AI - PROFESSIONAL DASHBOARD THEME
+# --------------------------------------------------
+
+st.markdown("""
+<style>
+.stApp {
+    background-color: #0B1220;
+    color: #E5EDF8;
+}
+
+.block-container {
+    padding-top: 2rem;
+    max-width: 1450px;
+}
+
+h1, h2, h3 {
+    color: #E5EDF8 !important;
+}
+
+[data-testid="stSidebar"] {
+    background-color: #111C30;
+    border-right: 1px solid #263750;
+}
+
+[data-testid="stMetric"] {
+    background-color: #16243A;
+    border: 1px solid #263D5C;
+    border-radius: 14px;
+    padding: 18px;
+}
+
+[data-testid="stMetricLabel"] {
+    color: #A9BED8 !important;
+}
+
+[data-testid="stMetricValue"] {
+    color: #54B8FF !important;
+}
+
+button[data-baseweb="tab"] {
+    color: #A9BED8;
+}
+
+button[data-baseweb="tab"][aria-selected="true"] {
+    color: #54B8FF !important;
+}
+
+[data-testid="stDataFrame"] {
+    border: 1px solid #263D5C;
+    border-radius: 12px;
+}
+
+.stDownloadButton button {
+    background-color: #1769AA;
+    color: white;
+    border-radius: 9px;
+    border: none;
+}
+
+hr {
+    border-color: #263750;
+}
+
+</style>
+""", unsafe_allow_html=True)
 st.title("🎓 CampusPulse AI")
 st.subheader("Smart Campus Intelligence System")
-st.caption("Explainable educational analytics prototype · Not a predictive or diagnostic system")
 
+st.markdown(
+    """
+    <div style="
+        background: linear-gradient(110deg, #17365D, #2476B9);
+        padding: 20px 24px;
+        border-radius: 14px;
+        color: white;
+        margin-bottom: 18px;
+    ">
+        <h3 style="color:white !important; margin:0;">
+            Welcome to Campus Intelligence
+        </h3>
+        <p style="color:#E7F1FC; margin:8px 0 0 0;">
+            Explore student performance, attendance, academic insights
+            and transparent student support recommendations.
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+st.caption(
+    "Explainable educational analytics prototype · "
+    "Not a predictive or diagnostic system"
+)
 with st.sidebar:
     st.header("Control centre")
     upload = st.file_uploader("Upload student CSV", type=["csv"], help=f"Maximum recommended upload size: {MAX_UPLOAD_MB} MB")
