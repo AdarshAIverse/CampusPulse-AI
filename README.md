@@ -1,191 +1,332 @@
-CampusPulse AI — Smart Campus Intelligence System
+# 🎓 CampusPulse AI
+### NEXT-GENERATION SMART CAMPUS INTELLIGENCE SYSTEM
 
-CampusPulse AI is a privacy-aware, explainable campus analytics prototype designed to explore academic performance, attendance patterns, and student-support indicators through an interactive dashboard.
+<p align="center">
+  <img src="https://img.shields.io/badge/CAMPUSPULSE-AI-00D9FF?style=for-the-badge&logo=academia&logoColor=white" />
+  <img src="https://img.shields.io/badge/Python-Analytics-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Streamlit-Interactive%20Dashboard-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" />
+  <img src="https://img.shields.io/badge/Analytics-Explainable-8B5CF6?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Testing-Pytest-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" />
+</p>
 
-It helps users understand campus-level trends and identify records that may benefit from further review using transparent, rule-based analytics.
+<p align="center">
+  <strong>Explore Data. Discover Patterns. Enable Smarter Campus Insights.</strong>
+</p>
 
-«Important: CampusPulse AI is an educational analytics prototype. It is not a validated AI prediction system, medical tool, diagnostic system, or measure of student potential. Its indicators are descriptive and rule-based, not trained machine-learning predictions.»
+<p align="center">
+  A privacy-aware educational analytics platform that transforms student datasets into interactive academic insights, attendance intelligence, and explainable student-support indicators.
+</p>
 
 ---
 
-Key Features
+## 🌌 SYSTEM OVERVIEW
 
-1. Interactive Dashboard
+**CampusPulse AI** is a Smart Campus Intelligence System developed to make educational data easier to explore, understand, and interpret.
 
-- Dark-themed Streamlit interface.
-- Campus-level academic and attendance summaries.
-- Interactive charts and department comparisons.
-- Filters for exploring uploaded datasets.
+It brings together academic analytics, attendance monitoring, data-quality diagnostics, transparent weighted scoring, rule-based student-support screening, and individual student reporting in one interactive dashboard.
 
-2. Data Upload and Quality Analysis
+Designed with a futuristic dark interface, animated visual elements, interactive charts, and modular Python architecture, CampusPulse AI provides an engaging environment for campus-level data exploration.
 
-- CSV file upload and schema validation.
-- Missing-value and duplicate reporting.
-- Numeric and range validation.
-- Data quality summaries and warnings.
+### ✦ The Mission
 
-3. Academic and Attendance Analytics
+To transform disconnected student records into structured, explainable information that can support more informed human review and campus-level understanding.
 
-- Marks and attendance summaries.
-- Correlation analysis.
+### ◈ The Core Concept
+
+**DATA → VALIDATION → ANALYSIS → INTELLIGENCE → INSIGHTS → REPORTS**
+
+---
+
+## 🧬 WHAT MAKES CAMPUSPULSE AI DIFFERENT?
+
+| Capability | Description |
+|---|---|
+| ⚡ Interactive Experience | Eight integrated dashboard modules |
+| 🧠 Explainable Analytics | Transparent weighted Campus Indicator |
+| 📊 Academic Intelligence | Marks analysis and department comparisons |
+| 📅 Attendance Intelligence | Attendance distribution and threshold-based review |
+| 🛡️ Data Quality Centre | Missing values, validation notices, and completeness |
+| 🤝 Student Support | Rule-based support screening |
+| 👤 Individual Profiles | Student-level analytical information |
+| 📑 Smart Reporting | PDF and CSV exports |
+| 🎨 Futuristic Interface | Dark navy theme, cyan-purple gradients, hover effects, and animated elements |
+| 🧪 Modular Engineering | Separated Python modules and automated tests |
+
+---
+
+# 🚀 01. THE CAMPUSPULSE EXPERIENCE
+
+## 🖥️ Eight Integrated Intelligence Modules
+
+### 01 — 🏠 Campus Overview
+
+The central command centre of CampusPulse AI.
+
+- Total student-record count.
+- Average academic marks.
+- Average attendance.
+- Average Campus Indicator.
+- Support-flag count.
+- Marks and attendance distributions.
+- Department-level academic comparisons.
+- Campus Indicator visualization.
+
+### 02 — 📚 Academic Intelligence
+
+Explore academic performance through descriptive analytics.
+
+- Average, median, highest, and lowest marks.
+- Academic performance distribution.
+- Reference pass-rate visualization.
+- Student-level marks table.
+- Department and year filtering.
+
+### 03 — 📅 Attendance Intelligence
+
+Understand attendance patterns and identify records for further review.
+
+- Average attendance.
+- Records below the 75% reference threshold.
+- Attendance distribution.
+- Low-attendance record exploration.
+- Integration with Student Support status.
+
+### 04 — 🧠 Data Insights Engine
+
+Explore relationships and unusual observations in numerical data.
+
+- Correlation matrix.
+- Correlation heatmap.
 - IQR-based outlier exploration.
-- Department-level comparisons and insights.
+- Average indicator component breakdown.
 
-4. Explainable Campus Indicator
+**Important:** Correlation does not establish causation. Statistical outliers are not automatically errors.
 
-- Transparent weighted scoring methodology.
-- Per-record indicator coverage.
-- Visible scoring transformations.
-- Weights are adjusted according to available input values.
+### 05 — 🛡️ Data Quality Centre
 
-5. Student Support
+Understand the condition of the uploaded dataset.
 
-- Rule-based student-support screening.
-- Identifies records that may need further review.
-- Provides explainable support indicators.
-- Does not make automated academic or personal decisions.
+- Row and column counts.
+- Dataset completeness percentage.
+- Column-level quality report.
+- Missing-value analysis.
+- Validation notices.
+- Missing-value visualizations.
 
-6. Individual Student Profile
+### 06 — 🤝 Student Support Intelligence
 
-- Individual student information and analytics.
-- Student-level academic and attendance details.
-- Individual CSV and PDF report downloads.
+A rule-based screening environment designed to highlight records that may deserve further human review.
 
-7. Reports and Exports
+Support categories include:
 
-- Campus analytics CSV export.
-- Campus analytics PDF report.
-- Individual student CSV and PDF reports.
-- Data quality reporting.
+- High support priority.
+- Needs academic support.
+- Needs attendance support.
+- Partial data.
+- Insufficient data.
+- On track.
 
-8. Testing and Modular Architecture
+The module also displays support reasons and recommended actions when supplied by the support-plan logic.
 
-- Modular Python package.
-- Automated unit tests using pytest.
-- CLI demonstration through "main.py".
+### 07 — 👤 Individual Student Profile
 
----
+Explore a selected student's available analytical information.
 
-Technology Stack
+- Student name and department.
+- Academic year.
+- Marks and attendance.
+- Campus Indicator.
+- Indicator coverage and band.
+- Support status and reason.
+- Recommended action.
+- Indicator component breakdown.
+- Individual PDF report download.
 
-Technology| Purpose
-Python| Core programming language
-Streamlit| Interactive dashboard
-Pandas| Data processing
-NumPy| Numerical operations
-Plotly| Interactive charts
-Seaborn| Data visualization
-Matplotlib| Data visualization
-ReportLab| PDF report generation
-Pytest| Automated testing
+### 08 — 📄 Reports & Exports
 
----
+Generate downloadable analytical outputs.
 
-Installation and Setup
-
-Windows
-
-Open PowerShell in the project directory.
-
-py -m venv venv
-.\venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-
-Run the application
-
-python -m streamlit run app.py
-
-Run automated tests
-
-python -m pytest -v
-
-Run the CLI demo
-
-python main.py
-
-macOS / Linux
-
-python3 -m venv venv
-source venv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-python -m streamlit run app.py
+- Analysed campus CSV.
+- Data-quality CSV.
+- Campus PDF report.
+- Individual student PDF report.
+- Current filtered report summary.
 
 ---
 
-CSV Input Schema
+# 🔄 02. HOW THE SYSTEM WORKS
 
-The application accepts CSV datasets.
+CampusPulse AI follows a structured data-processing pipeline.
 
-Required columns:
+```mermaid
+flowchart TD
+    A["📂 CSV Upload / Synthetic Demo"] --> B["🔍 Dataset Validation"]
+    B --> C["🛡️ Data Quality Checks"]
+    C --> D["⚙️ Data Processing"]
+    D --> E["🧮 Campus Indicator"]
+    D --> F["📊 Academic Analytics"]
+    D --> G["📅 Attendance Analytics"]
+    D --> H["🤝 Support Plan Engine"]
+    E --> I["🖥️ Interactive Dashboard"]
+    F --> I
+    G --> I
+    H --> I
+    I --> J["👤 Individual Student Profiles"]
+    I --> K["📑 PDF / CSV Reports"]
+```
 
-- "Name"
-- "Marks"
+## ⚙️ Execution Pipeline — Step by Step
 
-Optional columns:
+**STEP 01 — DATA ACQUISITION**
 
-- "Attendance"
-- "Sleep_Hours"
-- "Study_Hours"
-- "Screen_Time"
-- "Department"
-- "Year"
-- "Student_ID"
+Users upload a CSV file through the Streamlit sidebar or load synthetic demonstration data.
 
-Validation Rules
+The upload interface enforces a configured maximum file size and accepts CSV files.
 
-- Marks: 0–100.
-- Attendance: 0–100.
-- Hour-based values: 0–24.
-- Invalid numeric cells and out-of-range values are converted to missing values and reported.
-- Extra columns are retained.
+**STEP 02 — DATA VALIDATION**
 
-The built-in demonstration dataset contains synthetic, pseudonymous data.
+The dataset is passed through the existing data-loading module.
+
+- Schema validation.
+- Numeric-value handling.
+- Missing-value identification.
+- Configured range checks.
+- Validation notices.
+
+**STEP 03 — INDICATOR CALCULATION**
+
+The validated dataset is passed into the scoring engine, which calculates the Campus Indicator using available components.
+
+**STEP 04 — SUPPORT SCREENING**
+
+The intervention module creates a support plan using predefined rules.
+
+**STEP 05 — FILTERING**
+
+Users can explore records through:
+
+- Department filters.
+- Academic-year filters.
+- Marks-range filtering.
+
+The selected records are reprocessed for indicator and support analysis.
+
+**STEP 06 — ANALYTICS GENERATION**
+
+The dashboard calculates academic summaries, attendance summaries, department comparisons, correlation information, and outlier summaries.
+
+**STEP 07 — VISUAL EXPLORATION**
+
+Results are presented through Streamlit metrics, Plotly charts, data tables, and the eight dashboard tabs.
+
+**STEP 08 — REPORT GENERATION**
+
+Users can download campus-level and individual PDF/CSV reports.
 
 ---
 
-Campus Indicator Methodology
+# 🧮 03. EXPLAINABLE CAMPUS INDICATOR
 
-The Campus Indicator is a transparent weighted score based on available input values.
+The Campus Indicator is a transparent weighted scoring mechanism designed to summarize selected available inputs.
 
-Component| Default Weight
-Marks| 40%
-Attendance| 25%
-Study Hours| 15%
-Sleep Target Score| 10%
-Screen-Time Target Score| 10%
+## Default Component Weights
 
-How it works
+| Component | Weight |
+|---|---:|
+| Academic Marks | 40% |
+| Attendance | 25% |
+| Study Hours | 15% |
+| Sleep Target Score | 10% |
+| Screen-Time Target Score | 10% |
+| **Total** | **100%** |
+
+### How the scoring works
 
 1. Each available component is transformed into a score.
-2. Configured weights are renormalised over the available values for each record.
+2. Configured weights are renormalised over the available components for each record.
 3. The final indicator is calculated using the available weighted components.
-4. "Indicator_Coverage" reports the percentage of configured weight represented by available inputs.
+4. `Indicator_Coverage` reports the percentage of configured weight represented by available inputs.
 
-The transformations are implemented in:
+### Why indicator coverage matters
 
-"src/campuspulse/scoring.py"
+Not every uploaded record contains every optional input.
 
-Sleep and screen-time targets are illustrative design assumptions, not health guidance.
+Indicator coverage helps communicate how much of the configured scoring information was available when calculating an individual's indicator.
 
----
+**Implementation:** `src/campuspulse/scoring.py`
 
-Student Support Methodology
-
-The Student Support feature uses transparent, rule-based screening.
-
-It highlights records that may deserve further attention based on available academic and attendance information.
-
-- Screening rules are not trained machine-learning models.
-- A flagged record does not establish that a student is facing a problem.
-- Results should be reviewed by authorised people and interpreted with context.
-- The system must not be used as the sole basis for decisions about students.
+> Sleep and screen-time targets are illustrative design assumptions, not health guidance. The Campus Indicator is a heuristic and is not a validated measure of student potential.
 
 ---
 
-Project Structure
+# 🎨 04. FUTURISTIC USER INTERFACE
 
+CampusPulse AI features a custom-designed Streamlit interface.
+
+### Visual identity
+
+| UI Element | Design |
+|---|---|
+| Background | Deep navy and midnight blue |
+| Primary accent | Electric cyan |
+| Secondary accent | Indigo and violet |
+| Typography | Inter |
+| Hero section | Gradient panel with animated glow |
+| Branding | Floating gradient logo |
+| KPI cards | Hover elevation and 3D-style transforms |
+| Buttons | Cyan-blue gradient interactions |
+| Dashboard tabs | Dark rounded navigation |
+| Analytics | Dark-themed Plotly visualizations |
+
+### Interface experience
+
+- Animated hero entrance.
+- Floating logo animation.
+- Gradient lighting effects.
+- Hover-responsive KPI cards.
+- Interactive dashboard navigation.
+- Responsive layout adjustments.
+- Optional interface sound-effect test.
+- Reduced-motion CSS support.
+
+The visual design uses custom CSS alongside Streamlit components and embedded browser-side audio interaction.
+
+---
+
+# 🏗️ 05. SYSTEM ARCHITECTURE
+
+CampusPulse AI separates dashboard presentation from core data and analytics operations.
+
+```text
+                 CAMPUSPULSE AI
+                       |
+              STREAMLIT FRONTEND
+                    app.py
+                       |
+        +--------------+--------------+
+        |              |              |
+     DATA LAYER    ANALYTICS       UI / CHARTS
+        |           ENGINE             |
+     data.py      analytics.py      charts.py
+        |           |
+        |         scoring.py
+        |           |
+        |      interventions.py
+        |           |
+        +-----------+-----------------+
+                    |
+              REPORTING ENGINE
+                    |
+             +------+------+
+             |             |
+         reporting.py  pdf_reporting.py
+             |             |
+          CSV DATA      PDF REPORTS
+```
+
+## 📁 Project Directory
+
+```text
 CampusPulse_AI_Hackathon/
 │
 ├── app.py
@@ -215,65 +356,291 @@ CampusPulse_AI_Hackathon/
     ├── test_data.py
     ├── test_scoring.py
     └── test_interventions.py
+```
 
 ---
 
-Hackathon Demonstration Flow
+# 🛠️ 06. TECHNOLOGY STACK
 
-A suggested demonstration sequence:
+| Technology | Application |
+|---|---|
+| Python | Core programming language |
+| Streamlit | Interactive dashboard framework |
+| Pandas | Data processing and manipulation |
+| NumPy | Numerical computation and synthetic data generation |
+| Plotly Express | Interactive charts and visualizations |
+| Seaborn | Statistical visualization support |
+| Matplotlib | Heatmap and visualization support |
+| ReportLab | PDF report generation |
+| Pytest | Automated testing |
 
-1. Open the CampusPulse AI dashboard.
-2. Upload a sample CSV dataset.
-3. Demonstrate validation warnings and data quality reporting.
-4. Explore academic and attendance analytics.
-5. Show department comparisons and correlation analysis.
-6. Explain the Campus Indicator weights and coverage.
-7. Demonstrate Student Support screening.
-8. Open an individual Student Profile.
-9. Download campus-level and individual PDF reports.
-10. Explain privacy safeguards, limitations, and future improvements.
+### Key Python integrations
+
+- `streamlit` — dashboard and user interaction.
+- `pandas` — tabular data processing.
+- `numpy` — numerical operations.
+- `plotly.express` — interactive visualizations.
+- `logging` — application error logging.
+- `datetime` — report timestamps.
+- `io` — in-memory CSV processing.
 
 ---
 
-Privacy and Responsible Use
+# 💻 07. INSTALLATION & EXECUTION
+
+## System Requirements
+
+- Python installed.
+- VS Code or another Python editor.
+- PowerShell on Windows or a terminal on macOS/Linux.
+- Git (optional).
+
+## Step 1 — Clone the repository
+
+```bash
+git clone YOUR_GITHUB_REPOSITORY_URL
+cd CampusPulse_AI_Hackathon
+```
+
+Replace the URL with your actual GitHub repository address.
+
+## Step 2 — Create a virtual environment
+
+**Windows PowerShell**
+
+```powershell
+py -m venv venv
+```
+
+If `py` is not recognized:
+
+```powershell
+python -m venv venv
+```
+
+## Step 3 — Activate the environment
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+**macOS / Linux**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+## Step 4 — Install dependencies
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+## Step 5 — Launch CampusPulse AI
+
+```bash
+python -m streamlit run app.py
+```
+
+Open the local URL shown in the terminal.
+
+## Step 6 — Run automated tests
+
+```bash
+python -m pytest -v
+```
+
+## Step 7 — Run CLI demonstration
+
+```bash
+python main.py
+```
+
+---
+
+# 📊 08. DATASET SPECIFICATION
+
+CampusPulse AI accepts CSV datasets.
+
+## Required columns
+
+| Column | Description |
+|---|---|
+| `Name` | Student name or pseudonymous name |
+| `Marks` | Academic marks |
+
+## Optional columns
+
+| Column | Description |
+|---|---|
+| `Attendance` | Attendance percentage |
+| `Study_Hours` | Study duration |
+| `Sleep_Hours` | Sleep duration |
+| `Screen_Time` | Screen-time duration |
+| `Department` | Department |
+| `Year` | Academic year |
+| `Student_ID` | Student identifier |
+
+## Validation ranges
+
+| Field | Range |
+|---|---|
+| Marks | 0–100 |
+| Attendance | 0–100 |
+| Hour-based fields | 0–24 |
+
+### Dataset behaviour
+
+- Invalid numeric cells are converted into missing values and reported.
+- Out-of-range values are converted into missing values and reported.
+- Missing values and duplicate information are included in quality analysis.
+- Additional columns are retained.
+
+### Synthetic demonstration dataset
+
+The application can generate a reproducible demonstration dataset containing 80 pseudonymous student records.
+
+It includes:
+
+- Five departments: CSE, ECE, IT, ME, CE.
+- Academic years 1–4.
+- Synthetic marks.
+- Synthetic attendance.
+- Study hours.
+- Sleep hours.
+- Screen time.
+
+The demonstration data is generated using NumPy's seeded random generator.
+
+---
+
+# 🧪 09. TESTING & QUALITY ASSURANCE
+
+The project includes a modular automated testing structure using pytest.
+
+| Test Module | Testing Area |
+|---|---|
+| `test_analytics.py` | Analytics functionality |
+| `test_data.py` | Dataset handling |
+| `test_scoring.py` | Campus Indicator calculations |
+| `test_interventions.py` | Student Support logic |
+
+Run all tests:
+
+```bash
+python -m pytest -v
+```
+
+---
+
+# 🔐 10. PRIVACY & RESPONSIBLE ANALYTICS
 
 CampusPulse AI is designed as a privacy-aware educational prototype.
 
+### Recommended data practices
+
 - Use synthetic, anonymised, or properly consented data.
-- Do not upload identifiable student information to a public deployment.
+- Avoid uploading identifiable student information to public deployments.
 - Restrict access to sensitive datasets.
 - Follow institutional data-protection requirements.
 
-Before production use, additional safeguards would be required, including institutional authentication, role-based access control, encrypted storage, audit logs, retention controls, and security reviews.
+### Before production deployment
 
----
+Additional safeguards would be necessary:
 
-Limitations
+- Institutional authentication.
+- Role-based access control.
+- Encrypted storage.
+- Audit logs.
+- Data-retention controls.
+- Independent security reviews.
 
-- The Campus Indicator is a heuristic, not a validated predictive model.
-- Student Support uses predefined rules rather than trained AI.
-- Correlation does not establish causation.
-- Outlier detection identifies records for review, not necessarily errors.
+### ⚠️ Important limitations and disclaimer
+
+CampusPulse AI is an educational analytics prototype.
+
+It is not a validated AI prediction system, medical tool, diagnostic system, or measure of student potential.
+
+- The Campus Indicator is heuristic and descriptive.
+- Student Support uses predefined rules, not trained machine learning.
+- A flagged record does not establish that a student is facing a problem.
+- Correlation does not prove causation.
+- Outlier detection identifies unusual observations, not necessarily errors.
 - Sleep and screen-time targets are illustrative assumptions.
-- Results depend on the quality and completeness of uploaded data.
+- Results depend on dataset quality and completeness.
+
+**Human judgement and contextual review must remain central to any student-related interpretation or decision.**
 
 ---
 
-Future Scope
+# 🔮 11. FUTURE DEVELOPMENT
 
-Potential improvements include:
-
-- Role-based access for students, faculty, and administrators.
-- More advanced data-quality diagnostics.
-- Configurable indicator weights.
-- Additional explainability and reporting features.
-- Improved accessibility and dashboard usability.
-- Security, privacy, and institutional validation before real-world deployment.
+| Enhancement | Objective |
+|---|---|
+| 👥 Role-Based Access | Separate permissions for students, faculty, and administrators |
+| ⚙️ Configurable Scoring | Allow transparent customization of component weights |
+| 🔍 Advanced Data Diagnostics | Expand validation and quality reporting |
+| 📊 Enhanced Explainability | Improve visibility into analytical transformations |
+| ♿ Accessibility Improvements | Support more inclusive dashboard interaction |
+| 🔐 Security Enhancements | Strengthen safeguards for sensitive datasets |
+| 🏫 Institutional Evaluation | Validate suitability before real-world deployment |
 
 ---
 
-Project Status
+# 🎬 12. HACKATHON DEMONSTRATION FLOW
 
-CampusPulse AI is an educational hackathon prototype with an interactive Streamlit dashboard, modular analytics, explainable scoring, rule-based student-support screening, individual student profiles, PDF/CSV reporting, and automated tests.
+A suggested presentation sequence:
 
-Built with Python and Streamlit.
+| Step | Demonstration |
+|---:|---|
+| 01 | Launch the futuristic CampusPulse dashboard |
+| 02 | Introduce the project vision |
+| 03 | Upload a CSV dataset |
+| 04 | Demonstrate validation and data-quality analysis |
+| 05 | Explore academic performance |
+| 06 | Explore attendance patterns |
+| 07 | Demonstrate correlation and outlier insights |
+| 08 | Explain Campus Indicator weights and coverage |
+| 09 | Demonstrate Student Support screening |
+| 10 | Open an individual student profile |
+| 11 | Generate campus and individual PDF reports |
+| 12 | Explain privacy and responsible-use limitations |
+
+---
+
+# 🏁 13. PROJECT STATUS
+
+**CampusPulse AI — Smart Campus Intelligence System**
+
+An educational hackathon prototype bringing together:
+
+- Interactive Streamlit dashboard.
+- Academic and attendance analytics.
+- Explainable weighted Campus Indicator.
+- Rule-based Student Support screening.
+- Data quality diagnostics.
+- Department comparisons.
+- Individual student profiles.
+- PDF and CSV reporting.
+- Modular Python architecture.
+- Automated pytest test suite.
+
+### The Vision
+
+> Making campus data easier to understand, analytics more transparent, and student support more informed.
+
+---
+
+<p align="center">
+  <img src="https://img.shields.io/badge/BUILT%20WITH-PYTHON%20%7C%20STREAMLIT-22D3EE?style=for-the-badge" />
+</p>
+
+<p align="center">
+  <strong>🎓 CAMPUSPULSE AI</strong>
+  <br/>
+  <em>Explore Data. Discover Patterns. Support Smarter Campuses.</em>
+  <br/><br/>
+  <sub>Smart Campus Intelligence • Explainable Analytics • Responsible Technology</sub>
+</p>
